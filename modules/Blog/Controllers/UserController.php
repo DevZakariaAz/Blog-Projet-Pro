@@ -2,6 +2,10 @@
 
 namespace Modules\Blog\Controllers;
 
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Blog\App\Imports\UserImport;
+use Modules\Blog\App\Exports\UserExport;
+
 use Modules\Blog\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
@@ -15,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
        $users = User::paginate(5);
-       return view('admin.user.index',compact('users'));
+       return view('Blog::admin.user.index',compact('users'));
     }
 
     /**
@@ -40,7 +44,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         {{ $permissions =  $user->permissions;}}
-        return view('admin.user.show',compact('user','permissions'));
+        return view('Blog::admin.user.show',compact('user','permissions'));
 
     }
 
@@ -53,7 +57,7 @@ class UserController extends Controller
         $permissions = Permission::all();
         $userRole = $user->getRoleNames()->first;
         $userPermissions = $user->permissions->pluck('id')->toArray();
-        return view('admin.user.edit',compact('user','roles','permissions','userRole','userPermissions'));
+        return view('Blog::admin.user.edit',compact('user','roles','permissions','userRole','userPermissions'));
     }
 
     /**
@@ -73,7 +77,6 @@ class UserController extends Controller
     
         return redirect()->route('user.index')->with('success', 'User updated successfully!');
     }
-
     /**
      * Remove the specified resource from storage.
      */

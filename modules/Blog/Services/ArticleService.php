@@ -7,36 +7,42 @@ use Illuminate\Support\Facades\Auth;
 
 class ArticleService
 {
-    /**
-     * Store a new article.
-     */
-    public function store($data)
+    public function store($validatedData)
     {
-        $data['user_id'] = Auth::id();
-        $article = Article::create($data);
-        $article->tags()->attach($data['tags']);
+        $article = Article::create([
+            'title' => $validatedData['title'],
+            'content' => $validatedData['content'],
+            'category_id' => $validatedData['category'],
+            'user_id' => Auth::id(),
+        ]);
+
+        $article->tags()->sync($validatedData['tags']);
+
         return $article;
     }
 
-    /**
-     * Update an existing article.
-     */
-    public function update($article, $data)
+    public function update(Article $article, $validatedData)
     {
         $article->update([
-            'title' => $data['title'],
-            'content' => $data['content'],
-            'category_id' => $data['category'],
+            'title' => $validatedData['title'],
+            'content' => $validatedData['content'],
+            'category_id' => $validatedData['category'],
         ]);
-        $article->tags()->sync($data['tags']);
+        if (Auth::id() === $article->user_id) {
+            return $article->update(); // Allow update if the user is the owner
+        }
+
+        $article->tags()->sync($validatedData['tags']);
+
         return $article;
     }
 
-    /**
-     * Delete an article.
-     */
-    public function destroy($article)
+    public function destroy(Article $article)
     {
+        if (Auth::id() === $article->user_id) {
+            return $article->delete(); // Allow deletion if the user is the owner
+        }
+        $article->tags()->detach(); 
         $article->delete();
     }
 }

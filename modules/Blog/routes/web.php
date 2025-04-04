@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return view('auth.login');
+    return view('Blog::auth.login');
 })->middleware('guest');
 
 Route::get('/dashboard', function () {
@@ -20,6 +20,10 @@ Route::get('/dashboard', function () {
 Route::get('articles/{article}/comments', [CommentController::class, 'indexByArticle'])->name('comment.indexByArticle');
 Route::delete('articles/comment/{comment}', [CommentController::class, 'destroyByArticle'])->name('comment.destroyByArticle');
 
+Route::post('article/import', [ArticleController::class, 'import'])->name('article.import');
+Route::get('article/export', [ArticleController::class, 'export'])->name('article.export');
+Route::post('category/import', [CategoryController::class, 'import'])->name('category.import');
+Route::get('category/export', [CategoryController::class, 'export'])->name('category.export');
 
 
 Route::resource('/dashboard/comment',CommentController::class);

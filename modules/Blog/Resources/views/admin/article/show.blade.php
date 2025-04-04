@@ -1,56 +1,80 @@
-@extends('layouts.admin')
-    @section('content')
-        <!-- Content Header -->
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>Détail</h1>
-                    </div>
-                    <div class="col-sm-6">
+@extends('Blog::layouts.admin')
+
+@section('content')
+    <!-- Content Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-6">
+                    <h1 class="h3 mb-0">Article Details</h1>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <nav aria-label="breadcrumb">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{Route('dashboard')}}">Accueil</a></li>
-                            <li class="breadcrumb-item active"><a href="{{Route('article.index')}}">Articles</a></li>
-                            <li class="breadcrumb-item active">view</li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('article.index') }}">Articles</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">View</li>
                         </ol>
-                    </div>
+                    </nav>
                 </div>
             </div>
-            <div class="container-fluid">
-                <div class="row mb-2 justify-content-end">
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <a href="{{ Route('article.edit',$article) }}" class="btn btn-primary btn-sm p-2 text-white"><i class="fas fa-edit mr-2"></i>Modifier</a>
-                        </ol>
-                    </div>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    <a href="{{ route('article.edit', $article) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit mr-1"></i> Modify
+                    </a>
                 </div>
             </div>
-        </section>
-        <section class="content">
-            <div class="container-fluid">
-                <div class="card p-4">
-                    <h4>ID:</h4>
-                    <p>{{ $article->id }}</p>
-                    <h4>Name:</h4>
-                    <p>{{ $article->title }}</p>
-                    <h4>Content:</h4>
-                    <p>{{ $article->content }}</p>
-                    <h4>User ID:</h4>
-                    <p>{{ $article->user_id }}</p>
-                    <h4>Category ID:</h4>
-                    <p>{{ $article->category_id }}</p>
-                    <h4>Created At:</h4>
-                    <p>{{ $article->created_at }}</p>
+        </div>
+    </section>
 
-                    <div class="d-flex justify-content-end mt-3">
-                        <a href="{{ Route('comment.indexByArticle',$article) }}" class="btn btn-secondary btn-sm p-2 text-white">
-                            <i class="fas fa-comments mr-2"></i>View Comments
-                        </a>
-                    </div>
+    <!-- Article Details -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">{{ $article->title }}</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Title</th>
+                                <td>{{ $article->title }}</td>
+                            </tr>
+                            <tr>
+                                <th>Content</th>
+                                <td>{{ $article->content }}</td>
+                            </tr>
+                            <tr>
+                                <th>Tags</th>
+                                <td>
+                                    @foreach ($article->tags as $tag)
+                                        <span class="badge badge-success">{{ $tag->name }}</span>
+                                    @endforeach
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Author</th>
+                                <td>{{ $article->user->name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Category</th>
+                                <td>{{ $article->category->name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Created At</th>
+                                <td>{{ $article->created_at->format('d M Y, H:i') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-right">
+                    <a href="{{ route('comment.indexByArticle', $article) }}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-comments mr-1"></i> View Comments
+                    </a>
                 </div>
             </div>
-        </section>
-
-
-
-    @endsection
+        </div>
+    </section>
+@endsection
